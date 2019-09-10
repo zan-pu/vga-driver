@@ -1,3 +1,9 @@
+vga-driver.cache
+vga-driver.hw
+vga-driver.ioplanning
+vga-driver.ip_user_files
+vga-driver.runs
+vga-driver.sim
 # intermediate build files
 *.bgn
 *.bit

@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-`define RST_EN 0
+`define RST_EN 1'b0
 
 module vga_top #(
            parameter H_DISPLAY      = 11'd1024,
@@ -24,6 +24,19 @@ module vga_top #(
            output wire[3:0] blue
        );
 
+// 65 MHz clock signal
+wire clk_vga;
+
+clk_wiz u_clk_wiz (
+            // Clock out ports
+            .clk_out1(clk_vga),     // output clk_out1
+            // Status and control signals
+            .reset(~rstn), // input reset
+            // Clock in ports
+            .clk_in1(clk));      // input clk_in1
+
+reg[11:0] control_reg = 12'b111111110000;
+
 /* RGB signals */
 reg[3:0] reg_red;
 reg[3:0] reg_green;
@@ -46,7 +59,7 @@ reg[10:0] v_count;
 
 /* horizontal scan and vertical scan */
 
-always @ (posedge clk) begin
+always @ (posedge clk_vga) begin
     if (rstn == `RST_EN) begin
         h_count <= 11'b0;
         v_count <= 11'b0;
@@ -67,7 +80,7 @@ always @ (posedge clk) begin
     end
 end
 
-always @ (posedge clk) begin
+always @ (posedge clk_vga) begin
     if (h_count < H_SYNC_PULSE) begin
         h_reg <= 1'b0;
     end
@@ -76,7 +89,7 @@ always @ (posedge clk) begin
     end
 end
 
-always @ (posedge clk) begin
+always @ (posedge clk_vga) begin
     if (v_count < V_SYNC_PULSE) begin
         v_reg <= 1'b0;
     end
@@ -87,7 +100,9 @@ end
 
 /* Control RGB */
 
-always @ (posedge clk) begin
-
+always @ (posedge clk_vga) begin
+    reg_red <= control_reg[11:8];
+    reg_green <= control_reg[7:4];
+    reg_blue <= control_reg[3:0];
 end
 endmodule
