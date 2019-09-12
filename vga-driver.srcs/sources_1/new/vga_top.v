@@ -21,10 +21,10 @@ module vga_top #(
            input  wire      clk,
            input  wire      rstn,
 
-           input wire wen,
+           input wire       wen,
            input wire[31:0] wdata,
-           input wire[3:0] addr,
-           input wire rdata,
+           input wire[3:0]  addr,
+           input wire       rdata,
 
            output wire      hs,
            output wire      vs,
@@ -40,6 +40,8 @@ assign rdata = data[addr];
 reg[3:0] p_x;
 reg[3:0] p_y;
 reg[31:0] player_x;
+
+/* --- Initialize map --- */
 
 always @ (posedge clk_vga) begin
     if (rstn == `RST_EN) begin
@@ -65,13 +67,18 @@ always @ (posedge clk_vga) begin
     end
 end
 
+/* --- Write data to VGA Driver memory --- */
+
 always @ (posedge clk)  begin
     if (wen) begin
         data[addr] <= wdata;
     end
 end
 
+/* --- VGA Driver --- */
+
 // 65 MHz clock signal
+
 wire clk_vga;
 
 clk_wiz u_clk_wiz (
@@ -143,13 +150,15 @@ always @ (posedge clk_vga) begin
     end
 end
 
+/* --- Render Map --- */
 
 always @ (posedge clk_vga) begin
     player_x <= data[addr];
     p_x <= addr;
     if (player_x[29:28] == 2'b11) begin
         p_y <= 4'b1111;
-    end else if(player_x[27:26] == 2'b11) begin
+    end
+    else if(player_x[27:26] == 2'b11) begin
         p_y <= 4'b1110;
     end
     else if(player_x[25:24] == 2'b11) begin
@@ -193,19 +202,17 @@ always @ (posedge clk_vga) begin
     end
 end
 
-
-
-/* Control RGB */
+/* --- Control RGB --- */
 
 reg[1:0] debug;
 
 always @ (posedge clk_vga) begin
     /* Game board */
     if (h_count < 1140 && h_count > 500 && v_count < 740 && v_count > 100) begin
-        if(h_count>p_x*40+460 && h_count<p_x*40+500&&v_count>740-p_y*40 && v_count<780-p_y*40 && v_count!=0)begin
-                reg_red   <= `RED_R;
-                reg_green <= `RED_G;
-                reg_blue  <= `RED_B;
+        if(h_count>p_x*40+460 && h_count<p_x*40+500&&v_count>740-p_y*40 && v_count<780-p_y*40 && v_count!=0) begin
+            reg_red   <= `RED_R;
+            reg_green <= `RED_G;
+            reg_blue  <= `RED_B;
         end
         else if(h_count>500 && h_count<540) begin
             reg_red   <= `BLACK_R;
@@ -326,11 +333,12 @@ always @ (posedge clk_vga) begin
             reg_blue  <= `WHITE_B;
         end
     end
+
+    /* Out of bounds */
     else begin
         reg_red   <= `RED_R;
         reg_green <= `RED_G;
         reg_blue  <= `RED_B;
     end
 end
-/* Out of bounds */
 endmodule
