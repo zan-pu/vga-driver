@@ -21,10 +21,10 @@ module vga_top #(
            input  wire      clk,
            input  wire      rstn,
 
-           input wire       wen,
-           input wire[31:0] wdata,
-           input wire[3:0]  addr,
-           input wire       rdata,
+           // input wire       wen,
+           // input wire[31:0] wdata,
+           // input wire[3:0]  addr,
+           // input wire       rdata,
 
            output wire      hs,
            output wire      vs,
@@ -34,6 +34,13 @@ module vga_top #(
        );
 
 
+/* --- Standalone version variables --- */
+wire       wen;
+wire[31:0] wdata;
+wire[3:0]  addr;
+wire       rdata;
+
+/* --- VGA data memory --- */
 reg[31:0] data[15:0];
 
 assign rdata = data[addr];
