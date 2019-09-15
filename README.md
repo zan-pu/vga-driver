@@ -21,6 +21,12 @@ All source codes are available at:
 - [Simulation Sources](vga-driver.srcs/sim_1)
 - [Constraints](vga-driver.srcs/constrs_1)
 
+## Versions
+
+[Branch master](https://github.com/zan-pu/vga-driver/tree/master) is available as a module for ZanPU. It takes input similar to the data memory module in ZanPU, where the instruction `SW` and `LW` is used to manipulate data.
+
+[Branch standalone](https://github.com/zan-pu/vga-driver/tree/standalone) is built as a standalone version of the VGA driver. It's able to operate by itself and outputs a still image.
+
 ---
 
 📺 **VGA Driver** ©2019 ZanPU. Released under the [MIT License](./LICENSE).
