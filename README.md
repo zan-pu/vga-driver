@@ -20,6 +20,7 @@ All source codes are available at:
 - [Design Sources](vga-driver.srcs/sources_1)
 - [Simulation Sources](vga-driver.srcs/sim_1)
 - [Constraints](vga-driver.srcs/constrs_1)
+- [Independent IP Package](vga-driver.srcs/xgui)
 
 ## Versions
 
